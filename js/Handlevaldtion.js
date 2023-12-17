@@ -7,11 +7,25 @@ const checkbox = document.getElementById('flexCheckDefault');
 const submitButton = document.getElementById('submitButton');
 const errorMessage = document.getElementById('errorMessage');
 const successMessage = document.getElementById('successMessage');
+const nameRegex = /^[a-zA-Z]+$/; // Only alphabetic characters allowed
+const phoneRegex = /^\d{10}$/; // 10-digit phone number pattern
 let rememberMe;
+let Form_values; ;
 
+
+function getFormValues() {
+  const formValues = {
+    firstNameValue: firstName.value.trim(),
+    lastNameValue: lastName.value.trim(),
+    phoneNumberValue: phoneNumber.value.trim(),
+    educationLevelValue: educationLevel.value.trim(),
+  };
+  return formValues;
+}
 
 signupForm.addEventListener('submit', e => {
   e.preventDefault();
+  Form_values = getFormValues()
   validateInputs();
 });
 
@@ -20,29 +34,23 @@ checkbox.addEventListener('change', function() {
 });
 
 const validateInputs = () => {
-  const firstNameValue = firstName.value.trim();
-  const lastNameValue = lastName.value.trim();
-  const phoneNumberValue = phoneNumber.value.trim();
-  const educationLevelValue = educationLevel.value.trim();
-  const nameRegex = /^[a-zA-Z]+$/; // Only alphabetic characters allowed
-  const phoneRegex = /^\d{10}$/; // 10-digit phone number pattern
-
   errorMessage.innerHTML = ''; // Clear previous error messages
   errorMessage.setAttribute('hidden', 'true');
 
-  if (firstNameValue === '') {
+
+  if (Form_values.firstNameValue === '') {
     setErrorMessage('الاسم الأول مطلوب.');
-  } else if (!nameRegex.test(firstNameValue)) {
+  } else if (!nameRegex.test(Form_values.firstNameValue)) {
     setErrorMessage('يجب أن يحتوي الاسم الأول على حروف أبجدية فقط.');
-  } else if (lastNameValue === '') {
+  } else if (Form_values.lastNameValue === '') {
     setErrorMessage('اسم العائلة مطلوب.');
-  } else if (!nameRegex.test(lastNameValue)) {
+  } else if (!nameRegex.test(Form_values.lastNameValue)) {
     setErrorMessage('يجب أن يحتوي اسم العائلة على حروف أبجدية فقط.');
-  } else if (phoneNumberValue === '') {
+  } else if (Form_values.phoneNumberValue === '') {
     setErrorMessage('رقم الهاتف مطلوب.');
-  } else if (!phoneRegex.test(phoneNumberValue)) {
+  } else if (!phoneRegex.test(Form_values.phoneNumberValue)) {
     setErrorMessage('يجب أن يكون رقم الهاتف مكونًا من 10 أرقام.');
-  } else if (educationLevelValue === '') {
+  } else if (Form_values.educationLevelValue === '') {
     setErrorMessage('المستوى التعليمي مطلوب.');
   } else if (!rememberMe) {
     setErrorMessage('يجب الموافقة على الشروط والأحكام.');
@@ -52,6 +60,8 @@ const validateInputs = () => {
 
   return false;
 };
+
+
 // commen functions 
 
 const setErrorMessage = (message) => {
@@ -73,19 +83,17 @@ const resetLoadingState = () => {
 
 function redirect() {
   setTimeout(() => {
-    window.location = 'https://www.tutorialspoint.com/javascript/javascript_page_redirect.htm';
+    window.location = '';
   }, 1000);
 }
 
+// firbase 
 
-        // Import the functions you need from the SDKs you need
+ 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
+ 
         const firebaseConfig = {
           apiKey: "AIzaSyAsO8amTJnzVndoz0uRfVlGifgHDE0mUkM",
           authDomain: "heyauth-4a3ab.firebaseapp.com",
@@ -101,17 +109,15 @@ function redirect() {
 
 
 const sendData = async () => {
+  // loding button
     setLoadingState();
-    const firstNameValue = firstName.value.trim();
-    const lastNameValue = lastName.value.trim();
-    const phoneNumberValue = phoneNumber.value.trim();
-    const educationLevelValue = educationLevel.value.trim();
+
     try {
       const docRef = await addDoc(collection(db, "users"),{
-        firstName: firstNameValue,
-        lastName: lastNameValue,
-        phoneNumber: phoneNumberValue,
-        educationLevel: educationLevelValue,
+        firstName: Form_values.firstNameValue,
+        lastName: Form_values.lastNameValue,
+        phoneNumber: Form_values.phoneNumberValue,
+        educationLevel: Form_values.educationLevelValue,
         rememberMe: rememberMe
       });
       if (docRef) {
